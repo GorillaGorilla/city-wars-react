@@ -1,0 +1,12 @@
+.register{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 15px;
+  grid-auto-rows: max-content;
+  .input {
+    height: 35px;
+  }
+  .submit {
+    height: 35px;
+  }
+}

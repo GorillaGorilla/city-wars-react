@@ -1,0 +1,9 @@
+.area {
+  &.Map {
+    display: grid;
+    grid-area: map;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+  }
+}

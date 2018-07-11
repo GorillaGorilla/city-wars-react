@@ -1,0 +1,72 @@
+sudo: required
+
+env:
+  global:
+    - APP_NAME=citywars
+    - PORT=3100
+    - DEV_SERVER=SERVER_URL
+    - TEST_SERVER=SERVER_URL
+    - PROD_SERVER=SERVER_URL
+    - SONAR_SCANNER_DIR=sonar-scanner-3.1.0.1141-linux
+    - SONARQUBE_SERVER=https://sonarqube.citywars.com
+    - SONARQUBE_LOGIN=31f65d3b9fe05dd54ab9a883b7be2bae2ef108d3
+
+addons:
+  ssh_known_hosts:
+    # ansible docker dev
+    - SERVER_URL
+    # ansible docker test
+    - SERVER_URL
+    # ansible docker prod
+    - SERVER_URL
+    
+cache:
+  directories:
+    - node_modules
+    - $SONAR_SCANNER_DIR    
+
+language: node_js
+node_js:
+  - "9"
+
+before_install:
+  - ls -la ~/.ssh
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_rsa
+  - ssh-add -L # This command produces the public key used by travis. Copy the result into the aws_vars/ssh_keys/travis_keys folder as UNIQUE_NAME.pub
+  - node --version
+  - pwd
+  - ls -la
+  - echo "Running Travis build for $APP_NAME"
+  - if [ ! -e "${SONAR_SCANNER_DIR}/bin/sonar-scanner" ]; then wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.1.0.1141-linux.zip -O sonar-scanner.zip && unzip sonar-scanner.zip && rm sonar-scanner.zip; fi
+  - echo "sonar.host.url=$SONARQUBE_SERVER" > ${SONAR_SCANNER_DIR}/conf/sonar-scanner.properties
+  - export PATH=$PATH:$PWD/$SONAR_SCANNER_DIR/bin
+  - echo "Path = $PATH"
+  - ls -la $SONAR_SCANNER_DIR
+  - ls -la ${SONAR_SCANNER_DIR}/conf
+
+install:
+  - npm i
+
+script:
+  - npm run test
+  - npm run test-coverage
+  - sonar-scanner -Dsonar.projectKey=$APP_NAME -Dsonar.sources=src -Dsonar.exclusions="src/index.js, src/registerServiceWorker.js, src/setupTests.js, src/tempPolyfills.js, node_modules/**, **.test.js" -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONARQUBE_LOGIN
+  - npm run build
+
+after_success:
+  - mkdir $APP_NAME
+  - touch $APP_NAME/travis_build_$TRAVIS_JOB_NUMBER
+  - cp Dockerfile $APP_NAME/Dockerfile
+  - cp default.conf $APP_NAME/default.conf
+  - cp .htpasswd $APP_NAME/.htpasswd
+  - mv build $APP_NAME/build
+  - ls -la $APP_NAME
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: bash travis_deploy.sh
+    on:
+      all_branches: true
+

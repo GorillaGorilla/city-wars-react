@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+// Browser does not supports CSS-Grid
+@supports not (display: grid) { 
+  .App {
+    .layout {
+      display: none;
+    }
+  }
+}
+
+// Browser is IE11 (also does not supports CSS-Grid)
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .App {
+    .layout {
+      display: none;
+    }
+  }
+}
+
+// Browser supports CSS-Grid
+@supports (display: grid) {
+  .App {
+    p.unsupported {
+      display: none;
+    }
+  }
+}

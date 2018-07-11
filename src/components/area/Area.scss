@@ -1,0 +1,22 @@
+.area {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid limegreen;
+
+    &.header {
+        grid-area: header;
+    }
+    
+    &.sidebar {
+        grid-area: sidebar;
+    }
+    
+    &.contents {
+        grid-area: contents;
+    }
+    
+    &.footer {
+        grid-area: footer;
+    }
+}

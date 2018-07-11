@@ -1,14 +1,14 @@
 import React from 'react';
 import Area from '../area/Area';
+import Bar from '../bar/Bar';
 import './Layout.css';
 import MapArea from '../map-area/MapArea';
 
 const Layout = () => (
   <div className="layout">
-    <Area label="header" />
-    <Area label="sidebar" />
+    <Bar />
     <MapArea />
-    <Area label="panel" />
+    <Area label="tray" />
   </div>
 );
 

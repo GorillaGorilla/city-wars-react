@@ -1,0 +1,31 @@
+.bar {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid limegreen;
+    grid-gap: 0px;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "burger title profile";
+
+
+    .burger {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        grid-area: 'burger';
+    }
+
+    .title {
+        grid-area: 'title';
+    }
+
+    .profile {
+        display: grid;
+        font-size: x-large;
+        justify-content: center;
+        align-items: center;
+        grid-area: 'profile';
+    }
+}

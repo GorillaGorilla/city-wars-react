@@ -3,8 +3,7 @@ import updatePlayers from '../actions/players';
 import { dispatch } from '../components/redux/Redux';
 import { getGame } from '../game';
 import { call } from 'redux-saga/effects';
-
-export const URL = 'http://localhost:6017';
+import URL from '../api/apiURL';
 
 let socket;
 // const name = 'Freddie';

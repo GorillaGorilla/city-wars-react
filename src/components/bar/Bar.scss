@@ -14,19 +14,18 @@
         justify-content: center;
         align-items: center;
         padding: 10px;
-        grid-area: 'burger';
+        grid-area: burger;
     }
 
     .title {
-        grid-area: 'title';
+        grid-area: title;
     }
 
     .profile {
-        display: grid;
+        align-self: center;
+        justify-self: center;
         font-size: x-large;
-        justify-content: center;
-        align-items: center;
-        grid-area: 'profile';
+        grid-area: profile;
         border: 1px solid black;
         box-shadow: 0 0 5px 0px grey;
         border-radius: 12px;

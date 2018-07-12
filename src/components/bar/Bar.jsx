@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import HamburgerMenu from 'react-hamburger-menu';
 import './Bar.css';
@@ -31,4 +32,8 @@ Bar.propTypes = {
   // label: PropTypes.string.isRequired,
 };
 
-export default Bar;
+function mapStateToProps({ user, players }) {
+  return { user, players };
+}
+
+export default connect(mapStateToProps, { })(Bar);

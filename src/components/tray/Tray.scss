@@ -1,0 +1,39 @@
+.tray {
+    display: grid;
+    grid-area: tray;
+    grid-gap: 5px;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid limegreen;
+    grid-template-columns: 1fr;
+    grid-auto-rows: max-content;
+
+    button {
+        display: grid;
+        justify-content:space-between;
+        align-items:baseline;
+        grid-template-rows: 1fr;
+        grid-template-columns: 3fr 1fr;
+        grid-template-areas: "label     count";
+
+        &.planes {
+            background-color: silver;
+        }
+        &.tanks {
+            background-color: green;
+        }
+
+        .label {
+            grid-area: label;
+        }
+        .count {
+            grid-area: count;
+        }
+    }
+}
+
+@media (orientation: landscape) {
+    .tray {
+        grid-auto-rows: max-content;
+    }
+}

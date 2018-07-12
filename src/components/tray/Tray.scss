@@ -1,14 +1,14 @@
 .tray {
     display: grid;
     grid-area: tray;
-    grid-gap: 5px;
     justify-content: center;
     align-items: center;
-    border: 4px solid limegreen;
+    border-top: 2px solid black;
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
 
     button {
+        border-bottom: 1px solid black;
         display: grid;
         justify-content:space-between;
         align-items:baseline;

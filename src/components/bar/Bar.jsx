@@ -22,8 +22,10 @@ const Bar = (props) => {
           animationDuration={0.5}
         />
       </div>
-      <h1 className="title">CITY WARS <span role="img" aria-label="gun">🔫</span></h1>
-      <span className="profile" role="img" aria-label="person-fencing"> 🤺 </span>
+      <h1 className="title">BATTLELAND <span role="img" aria-label="target">🎯</span></h1>
+      <button className="profile">
+        <span role="img" aria-label="person">👱</span>
+      </button>
     </div>
   );
 };

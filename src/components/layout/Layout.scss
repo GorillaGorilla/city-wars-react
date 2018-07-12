@@ -9,3 +9,14 @@
         "map"
         "tray";
 }
+
+@media (orientation: landscape) {
+    .layout {
+        grid-template-columns: 1fr 6fr 3fr;
+        grid-template-rows: 100vh;
+        grid-template-areas: "bar    map    tray";
+    }
+    .title {
+        writing-mode: vertical-rl;
+    }
+}

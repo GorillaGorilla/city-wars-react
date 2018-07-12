@@ -1,10 +1,9 @@
 /* eslint no-use-before-define: 0 */ 
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { camelize } from '../../utils/index';
-
+import './Map.css';
 const evtNames = ['ready', 'click', 'dragend'];
 
 export class Map extends Component {
@@ -122,12 +121,8 @@ export class Map extends Component {
 
 
   render() {
-    const style = {
-      display: "grid",
-      height: "500px",
-    };
     return (
-      <div style={style} ref='map'>
+      <div className='map' ref='map'>
         OEFNOSFOIFPINGPANGkdfis
         {this.renderChildren()}
       </div>

@@ -9,9 +9,8 @@ import Marker from '../marker/Marker';
 import Socket from '../../api/socket';
 
 const style = {
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  gridTemplateRows: '1fr',
+  width: '100%',
+  height: '100%',
   backgroundColor: 'yellow',
   className: 'hello',
 };
@@ -101,12 +100,10 @@ class Container extends React.Component {
       return <div>Loading...</div>;
     }
     return (
-      <div >
-        <Map google={google} >
-          {this.playerMarkers()}
-          {this.player()}
-        </Map>
-      </div>);
+      <Map google={google} >
+        {this.playerMarkers()}
+        {this.player()}
+      </Map>);
   }
 }
 

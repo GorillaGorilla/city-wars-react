@@ -29,3 +29,14 @@
         grid-area: 'profile';
     }
 }
+
+@media (orientation: landscape) {
+    .bar {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 5fr 1fr;
+        grid-template-areas: 
+            "burger"
+            "title"
+            "profile";
+    }
+}

@@ -1,11 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import GoogleApiComponent from '../google-api-component/Google-api-component';
 import { updateLocation } from '../../actions/users';
 import { updatePlayers } from '../../actions/players';
+import { updateAssets } from '../../actions/assets';
+import { moveTarget } from '../../actions/targetter';
 import Map from '../map/Map';
 import { newGame, setPlayer } from '../../game';
 import Marker from '../marker/Marker';
+import Shape from '../shape/Shape';
 import Socket from '../../api/socket';
 
 const style = {
@@ -19,16 +23,8 @@ let Game;
 let socket;
 
 class Container extends React.Component {
-  constructor(props) {
-    super();
-    // maybe move all this to component will mount?
-  }
-
   componentDidMount() {
-    const { user } = this.props;
     if (navigator && navigator.geolocation) {
-      console.log('component did mount', navigator.geolocation);
-
       const p = () => {
         return new Promise((resolve, reject) => {
           const get = (pos) => {
@@ -48,8 +44,6 @@ class Container extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Typical usage (don't forget to compare props):
-    console.log('componentDidUpdate');
     const { user } = this.props;
     if (user.location !== prevProps.user.location) {
       const p2 = () => {
@@ -61,14 +55,12 @@ class Container extends React.Component {
               const { players, assets, explosions } = data;
               // dispatch(receiveUser(data.user));
               this.props.updatePlayers(players);
-              // this.props.updateAssets(assets);
+              this.props.updateAssets(assets);
               // this.props.updateExplosions(explosions);
             });
             Socket.on('game connected', (response) => {
               Game = newGame(response.gameId);
               setPlayer(user.name);
-              console.log('Game', Game);
-              console.log('app.game', response.gameId);
               Socket.sendLocation(user);
             });
             Socket.on('waiting for game', (data) => {
@@ -88,30 +80,55 @@ class Container extends React.Component {
     });
   }
 
+  targetFinder() {
+    const { targetting } = this.props;
+    return <Shape position={{ lng: targetting.location.x, lat: targetting.location.y }} />;
+  }
+
+  assetMarkers() {
+    const { assets } = this.props;
+    return assets.map((asset) => {
+      return <Marker key={asset.id} position={{ lng: asset.x, lat: asset.y }} icon={asset.type} />;
+    });
+  };
+
   player() {
     const { user } = this.props;
     return <Marker key={user.name} position={{ lng: user.location.x, lat: user.location.y }} icon="player" />;
   }
 
   render() {
-    const { loaded, user, google } = this.props;
-    console.log('MapContainer this.props', this.props, user.location.x);
+    const { loaded, user, google, targetting } = this.props;
     if (!loaded || !user.location.x) {
       return <div>Loading...</div>;
     }
+    const moveRender = (props, map, evt) => {
+      console.log('evt', map, map.center.lng(), map.center.lat());
+      const location = { x: map.center.lng(), y: map.center.lat() };
+      this.props.moveTarget(location);
+    };
     return (
-      <Map google={google} >
+      <Map google={google} onDragend={moveRender}>
         {this.playerMarkers()}
         {this.player()}
+        {this.assetMarkers()}
+        {targetting.status ? this.targetFinder() : []}
       </Map>);
   }
 }
 
-function mapStateToProps({ user, players }) {
-  return { user, players };
+function mapStateToProps({ user, players, assets, targetting }) {
+  return { user, players, assets, targetting };
 }
+
+Container.propTypes = {
+  updateLocation: PropTypes.func.isRequired,
+  updatePlayers: PropTypes.func.isRequired,
+  updateAssets: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+};
 
 export default GoogleApiComponent({
   apiKey: 'AIzaSyCvVWYrWCaBIajNRaBHHs293CQ9xQE5zOs',
   style,
-})(connect(mapStateToProps, { updateLocation, updatePlayers })(Container));
+})(connect(mapStateToProps, { updateLocation, updatePlayers, updateAssets, moveTarget })(Container));

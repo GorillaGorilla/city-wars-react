@@ -1,33 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AA_TANK from '../../assets/images/AA_TANK.png';
-import player from '../../assets/images/player_icon.png';
-import FLAK from '../../assets/images/FLAK.png';
-import PLANE from '../../assets/images/plane.png';
-import enemy from '../../assets/images/colonel2.png';
 import { camelize } from '../../utils/index';
 
 const evtNames = ['click', 'mouseover'];
-const icons = {
-  player,
-  enemy,
-  BOMBER: PLANE,
-  AA_TANK,
-  FLAK,
-};
-let marker;
 
-export default class Marker extends Component {
+let shape;
+
+export default class Shape extends Component {
   componentDidUpdate(prevProps) {
     if ((this.props.map !== prevProps.map) ||
       (this.props.position !== prevProps.position)) {
-      this.renderMarker();
+      this.renderShape();
     }
   }
 
   componentWillUnmount() {
-    if (this.marker) {
-      this.marker.setMap(null);
+    if (this.shape) {
+      this.shape.setMap(null);
     }
   }
 
@@ -35,37 +24,41 @@ export default class Marker extends Component {
     return (e) => {
       const evtName = `on${camelize(evt)}`;
       if (this.props[evtName]) {
-        this.props[evtName](this.props, this.marker, e);
+        this.props[evtName](this.props, this.shape, e);
       }
     };
   }
 
-  renderMarker() {
+  renderShape() {
     let { position } = this.props;
     const {
       map,
       google,
       mapCenter,
-      icon,
     } = this.props;
 
-    if (this.marker) {
-      this.marker.setOptions({
+    if (this.shape) {
+      this.shape.setOptions({
         position,
       });
     } else {
       const pos = position || mapCenter;
       position = new google.maps.LatLng(pos.lat, pos.lng);
       const pref = {
+        strokeColor: '#4286f4',
+        strokeOpacity: 0.0,
+        strokeWeight: 2,
+        fillColor: '#4286f4',
+        fillOpacity: 0.0,
         map,
         position,
-        icon: icons[icon],
+        radius: this.props.radius || 50,
       };
-      this.marker = new google.maps.Marker(pref);
+      this.shape = new google.maps.Circle(pref);
     }
 
     evtNames.forEach((e) => {
-      this.marker.addListener(e, this.handleEvent(e));
+      this.shape.addListener(e, this.handleEvent(e));
     });
   }
 
@@ -74,7 +67,7 @@ export default class Marker extends Component {
   }
 }
 
-Marker.propTypes = {
+Shape.propTypes = {
   position: PropTypes.object,
   map: PropTypes.object
 };

@@ -74,6 +74,8 @@ export class Map extends Component {
     
   }
 
+  
+
   recenterMap() {
     const map = this.map;
     const curr = this.state.currentLocation;
@@ -94,6 +96,7 @@ export class Map extends Component {
     const handlerName = `on${camelize(evtName)}`;
 
     return (e) => {
+      console.log('e', e);
       if (timeout) {
         clearTimeout(timeout);
         timeout = null;
@@ -134,8 +137,9 @@ Map.propTypes = {
   google: PropTypes.object,
   zoom: PropTypes.number,
   initialCenter: PropTypes.object,
-  onMove: PropTypes.func
 };
+
+evtNames.forEach(e => Map.propTypes[camelize(e)] = PropTypes.func);
 
 Map.defaultProps = {
   zoom: 13,
@@ -145,7 +149,8 @@ Map.defaultProps = {
     lng: 0.0416
   },
   centerAroundCurrentLocation: true,
-  onMove: () => {},
+  onDragend: e => console.log('noDragend event handler'),
 };
+
 
 export default Map;

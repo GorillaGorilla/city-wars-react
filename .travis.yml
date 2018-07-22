@@ -7,9 +7,7 @@ env:
     - DEV_SERVER=SERVER_URL
     - TEST_SERVER=SERVER_URL
     - PROD_SERVER=SERVER_URL
-    - SONAR_SCANNER_DIR=sonar-scanner-3.1.0.1141-linux
-    - SONARQUBE_SERVER=https://sonarqube.citywars.com
-    - SONARQUBE_LOGIN=31f65d3b9fe05dd54ab9a883b7be2bae2ef108d3
+    # - SONAR_SCANNER_DIR=sonar-scanner-3.1.0.1141-linux
 
 addons:
   ssh_known_hosts:
@@ -23,7 +21,6 @@ addons:
 cache:
   directories:
     - node_modules
-    - $SONAR_SCANNER_DIR    
 
 language: node_js
 node_js:
@@ -38,12 +35,12 @@ before_install:
   - pwd
   - ls -la
   - echo "Running Travis build for $APP_NAME"
-  - if [ ! -e "${SONAR_SCANNER_DIR}/bin/sonar-scanner" ]; then wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.1.0.1141-linux.zip -O sonar-scanner.zip && unzip sonar-scanner.zip && rm sonar-scanner.zip; fi
-  - echo "sonar.host.url=$SONARQUBE_SERVER" > ${SONAR_SCANNER_DIR}/conf/sonar-scanner.properties
-  - export PATH=$PATH:$PWD/$SONAR_SCANNER_DIR/bin
-  - echo "Path = $PATH"
-  - ls -la $SONAR_SCANNER_DIR
-  - ls -la ${SONAR_SCANNER_DIR}/conf
+  # - if [ ! -e "${SONAR_SCANNER_DIR}/bin/sonar-scanner" ]; then wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.1.0.1141-linux.zip -O sonar-scanner.zip && unzip sonar-scanner.zip && rm sonar-scanner.zip; fi
+  # - echo "sonar.host.url=$SONARQUBE_SERVER" > ${SONAR_SCANNER_DIR}/conf/sonar-scanner.properties
+  # - export PATH=$PATH:$PWD/$SONAR_SCANNER_DIR/bin
+  # - echo "Path = $PATH"
+  # - ls -la $SONAR_SCANNER_DIR
+  # - ls -la ${SONAR_SCANNER_DIR}/conf
 
 install:
   - npm i
@@ -51,7 +48,7 @@ install:
 script:
   - npm run test
   - npm run test-coverage
-  - sonar-scanner -Dsonar.projectKey=$APP_NAME -Dsonar.sources=src -Dsonar.exclusions="src/index.js, src/registerServiceWorker.js, src/setupTests.js, src/tempPolyfills.js, node_modules/**, **.test.js" -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONARQUBE_LOGIN
+  # - sonar-scanner -Dsonar.projectKey=$APP_NAME -Dsonar.sources=src -Dsonar.exclusions="src/index.js, src/registerServiceWorker.js, src/setupTests.js, src/tempPolyfills.js, node_modules/**, **.test.js" -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$SONARQUBE_SERVER -Dsonar.login=$SONARQUBE_LOGIN
   - npm run build
 
 after_success:

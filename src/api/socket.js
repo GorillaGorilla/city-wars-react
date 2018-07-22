@@ -56,6 +56,19 @@ const sendLocation = (user) => {
   socket.emit('location', { gameId: getGame().getId(), location: { ...location, username: user.name } });
 };
 
+const sendOrder = (type, username, quantity, target) => {
+  const obj = {
+    gameId: getGame().getId(),
+    input: {
+      username,
+      action: `SEND_${type}`,
+      target,
+    },
+  };
+  console.log('obj', obj);
+  socket.emit('gameInputMessage', obj);
+};
+
 const on = (eventName, callback) => {
   socket.on(eventName, callback);
 };
@@ -69,5 +82,6 @@ export default {
   sendLocation,
   addPlayer,
   on,
+  sendOrder,
   isConnected,
 };

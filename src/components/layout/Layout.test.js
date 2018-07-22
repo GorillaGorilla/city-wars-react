@@ -14,11 +14,11 @@ describe('Layout', () => {
   });
 
   it('should contain 4 areas', () => {
-    expect(layout.children().length).toEqual(4);
+    expect(layout.children().length).toEqual(3);
   });
 
-  it('should contain a map area component', () => {
-    expect(layout.find('MapArea').exists()).toBe(true);
-  });
+  // it('should contain a map area component', () => {
+  //   expect(layout.find('Connect(MapContainer)').exists()).toBe(true);
+  // });
 });
 

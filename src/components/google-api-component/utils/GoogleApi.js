@@ -6,7 +6,7 @@ export const GoogleApi = function(opts) {
   const client = opts.client;
   const URL = 'https://maps.googleapis.com/maps/api/js';
 
-  const googleVersion = '3.22';
+  const googleVersion = '3.34';
   let script = null;
   let google = window.google = null;
   let loading = false;

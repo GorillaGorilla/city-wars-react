@@ -2,6 +2,7 @@ import openSocket from 'socket.io-client';
 import updatePlayers from '../actions/players';
 import { dispatch } from '../components/redux/Redux';
 import { getGame } from '../game';
+import { playerSchema, assetSchema, objSchema } from './js-binary-schemas';
 import { call } from 'redux-saga/effects';
 import URL from '../api/apiURL';
 
@@ -28,9 +29,6 @@ const startConnection = (user) => {
         const data = { token, name };
         console.log('add user data', data);
         resolve(data);
-        // if (callback) {
-        //   callback(null, response);
-        // }
       })
         .on('unauthorized', (msg) => {
           console.log(`unauthorized: + ${msg}`);
@@ -52,7 +50,6 @@ const addPlayer = (userData) => {
 
 const sendLocation = (user) => {
   const { location } = user;
-  console.log('location', location);
   socket.emit('location', { gameId: getGame().getId(), location: { ...location, username: user.name } });
 };
 
@@ -69,9 +66,46 @@ const sendOrder = (type, username, quantity, target) => {
   socket.emit('gameInputMessage', obj);
 };
 
-const on = (eventName, callback) => {
-  socket.on(eventName, callback);
+const decodeEvt = (type, data) => {
+  if (type === 'gameState') {
+    console.log('data', data);
+    const decoded = objSchema.decode(data.stuff);
+    console.log('decoded', decoded);
+    const fullyDecoded = {
+      players: decoded.players.map(player => playerSchema.decode(player)),
+      assets: decoded.assets.map(asset => assetSchema.decode(asset)),
+    };
+    return fullyDecoded;
+  }
+  return data;
 };
+
+const ABToStr = ab =>
+  new Uint8Array(ab).reduce((p, c) =>
+    p + String.fromCharCode(c), '');
+
+const abToStr = (buf) => {
+  console.log('hmm', String.fromCharCode.apply(null, new Uint16Array(buf)));
+  const array = new Uint16Array(buf);
+  const string = new TextDecoder('utf-8').decode(array);
+  console.log('array', array);
+  return string;
+};
+
+const on = (eventName, callback) => {
+  socket.on(eventName, (data) => {
+    // const string = ABToStr(data);
+    const decoded = decodeEvt(eventName, data);
+    console.log('after decode', eventName, decoded);
+    callback(decoded);
+  });
+};
+
+// const socketWrapper = {
+//   connect: () => {
+//   }
+//   on: on
+// }
 
 const isConnected = () => {
   return connected;
